@@ -831,6 +831,10 @@ figcaption {
   margin-top: 31px;
 }
 
+.image-4 {
+  margin-top: -2px;
+}
+
 @media screen and (max-width: 991px) {
   .styleguide-block {
     text-align: center;
