@@ -18,7 +18,7 @@ const CardTT: React.FC<ProjectProps> = ({project}) => {
     const {name, more: {declaration, website, linkedin}, startDate, endDate} = project;
 
     return (
-        <Card variant="outlined" style={{maxWidth: '300px', margin: '10px'}}>
+        <Card variant="outlined" style={{margin: '10px'}}>
             <CardContent>
                 <Typography variant="h6" align="center" gutterBottom>
                     {name}

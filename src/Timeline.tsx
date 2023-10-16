@@ -18,18 +18,19 @@ const Container: any = styled.div`
 `;
 
 const Tooltip: any = styled.div`
+  word-break: break-all; // This will break URLs and long strings more aggressively
   position: fixed;
   background-color: #ffffff;
   border: 1px solid #e0e0e0;
   border-radius: 5px;
   padding: 8px;
-  max-width: 90vw; // or any other desired max-width
-  width: auto; // Make sure the tooltip adjusts based on content
+  width: auto;
+  max-width: 90vw;
 
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   pointer-events: none;
-  // white-space: nowrap; // comment this out or remove
+  // white-space: nowrap; // Comment or remove this line
   display: ${(props: any) => (props.visible ? 'block' : 'none')};
   top: ${(props: any) => props.positionAbove ? 'initial' : props.y}px;
   bottom: ${(props: any) => props.positionAbove ? `${window.innerHeight - props.y}px` : 'initial'};
