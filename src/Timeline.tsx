@@ -1,40 +1,43 @@
-import {useEffect, useState} from 'react';
+// Timeline.js
+import React from 'react';
 import styled from 'styled-components';
 
-const YearBlock = styled.div<{ left: number, width: number }>`
+
+const YearBlock: any = styled.div`
   position: absolute;
   bottom: 0;
-  left: ${props => props.left}%;
-  width: ${props => props.width}%;
+  left: ${(props: any) => props.left}%;
+  width: ${(props: any) => props.width}%;
   height: 20px;
-  background-color: #e0e0e0;
+  background-color: #e0e0e0; // You can choose any color you want here
   border-radius: 4px;
   z-index: 1;
   text-align: center;
 `;
 
-const YearMarker = styled.div<{ left: number }>`
+
+const YearMarker: any = styled.div`
   position: absolute;
-  bottom: 0;
-  left: ${props => props.left}%;
+  bottom: 0; // Adjust this if you want the markers at the top
+  left: ${(props: any) => props.left}%;
   width: 1px;
   height: 20px;
   background-color: black;
   z-index: 1;
 `;
 
-const YearLabel = styled.div<{ left: number }>`
+const YearLabel: any = styled.div`
   position: absolute;
-  bottom: -20px;
-  left: ${props => props.left - 0.5}%;
+  bottom: -20px; // Adjust this if you want the labels at the top
+  left: ${(props: any) => props.left - 0.5}%; // Centers the label under the marker
   font-size: 12px;
 `;
 
-const Container = styled.div<{ rows: number }>`
+const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: ${props => props.rows * 25 + 20}px;
+  height: 400px;
   width: 80%;
   margin: 0 auto;
   border: 1px solid #e0e0e0;
@@ -42,122 +45,103 @@ const Container = styled.div<{ rows: number }>`
   overflow: hidden;
 `;
 
-const Project = styled.div<{ top: number, left: number, width: number, index: number }>`
+
+const Project: any = styled.div`
   position: absolute;
-  top: ${props => props.top}%;
-  left: ${props => props.left}%;
-  width: ${props => props.width}%;
+  top: ${(props: any) => props.top}%;
+  left: ${(props: any) => props.left}%;
+  width: ${(props: any) => props.width}%;
   padding: 5px;
-  background-color: ${props => colors[props.index]};
+  background-color: ${(props: any) => colors[props.index]};
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 2;
-`;
+`
+
 
 const colors = [
-    "#9880ab", "#a572c9", "#ddb6f5", "#8b6eb5", "#9470bc", "#ddb6f5",
-    "#8271ae", "#8b6eb5", "#9470bc", "#ddb6f5", "#8271ae", "#8b6eb5",
-    "#9470bc", "#8271ae", "#8b6eb5", "#ddb6f5", "#9470bc", "#8271ae",
-    "#8b6eb5", "#9470bc", "#ddb6f5", "#8271ae", "#8b6eb5", "#9470bc",
-    "#8271ae", "#7873a6"
+    "#9880ab",
+    "#a572c9",
+    "#ddb6f5",
+    "#8b6eb5",
+    "#9470bc",
+    "#ddb6f5",
+    "#8271ae",
+    "#8b6eb5",
+    "#9470bc",
+    "#ddb6f5",
+    "#8271ae",
+    "#8b6eb5",
+    "#9470bc",
+    "#8271ae",
+    "#8b6eb5",
+    "#ddb6f5",
+    "#9470bc",
+    "#8271ae",
+    "#8b6eb5",
+    "#9470bc",
+    "#ddb6f5",
+    "#8271ae",
+    "#8b6eb5",
+    "#9470bc",
+    "#8271ae",
+    "#7873a6"
 ];
 
-const Tooltip: any = styled.div<{ visible: boolean }>`
-  position: absolute;
-  background-color: white;
-  padding: 10px;
-  z-index: 10;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  display: ${props => props.visible ? 'block' : 'none'};
-`;
 
-interface ProjectProps {
-    name: string;
-    startDate: string;
-    endDate: string;
-}
-
-interface TooltipPosition {
-    top: number;
-    left: number;
-}
-
-const Timeline = ({projects}: { projects: ProjectProps[] }) => {
-
-
+const Timeline = ({projects}: any) => {
     const earliestStartDate: any = new Date(Math.min(...projects.map((project: any) => {
         const [day, month, year] = project.startDate.split("/").map(Number);
         return new Date(year, month - 1, day).getTime();
     })));
-    const latestEndDate: any = new Date();
+    const latestEndDate: any = new Date(Math.max(...projects.map((project: any) => {
+        const [day, month, year] = project.endDate.split("/").map(Number);
+        return new Date(year, month - 1, day).getTime();
+    })));
     const totalTime = latestEndDate.getTime() - earliestStartDate.getTime();
 
-    const [tooltipVisible, setTooltipVisible] = useState<boolean>(false);
-    const [tooltipContent, setTooltipContent] = useState<string>("");
-    const [tooltipPosition, setTooltipPosition] = useState<TooltipPosition>({top: 0, left: 0});
-    const [projectsWithRows, setProjectsWithRows] = useState<(ProjectProps & {
-        row: number,
-        left: number,
-        width: number
-    })[]>([]);
+    const startYear = earliestStartDate.getFullYear();
+    const endYear = latestEndDate.getFullYear();
 
-    useEffect(() => {
-        const calculateRows = () => {
-            return projects.map(project => {
-                const [startDay, startMonth, startYear] = project.startDate.split("/").map(Number);
-                const startDate = new Date(startYear, startMonth - 1, startDay);
-                const [endDay, endMonth, endYear] = project.endDate.split("/").map(Number);
-                const endDate = project.endDate === "today" ? new Date() : new Date(endYear, endMonth - 1, endDay);
-                const left = ((startDate.getTime() - earliestStartDate.getTime()) / totalTime) * 100;
-                const width = ((endDate.getTime() - startDate.getTime()) / totalTime) * 100;
+    const yearMarkers = [];
+    for (let year = startYear; year <= endYear; year++) {
+        const dateInYearStart = new Date(year, 0, 1);
+        const dateInYearEnd = new Date(year + 1, 0, 1); // The start of the next year
+        const left = ((dateInYearStart.getTime() - earliestStartDate.getTime()) / totalTime) * 100;
+        const width = ((dateInYearEnd.getTime() - dateInYearStart.getTime()) / totalTime) * 100;
 
-                const row = getRowForProject(left, width, projectsWithRows);
-
-                return {...project, row, left, width};
-            });
-        };
-
-        const getRowForProject = (left: number, width: number, currentProjects: typeof projectsWithRows) => {
-            let row = 0;
-            while (true) {
-                const overlaps = currentProjects.some(project => {
-                    return project.row === row && (left + width) > project.left && left < (project.left + project.width);
-                });
-
-                if (!overlaps) return row;
-
-                row++;
-            }
-        };
-
-        setProjectsWithRows(calculateRows());
-    }, [projects]);
+        yearMarkers.push(
+            <React.Fragment key={year}>
+                <YearBlock left={left} width={width}>{year}</YearBlock>
+                <YearMarker left={left}/>
+                <YearLabel left={left}>{year}</YearLabel>
+            </React.Fragment>
+        );
+    }
 
 
     return (
-        <Container rows={projectsWithRows.length}>
-            {projectsWithRows.map((project: any, index: any) => {
+        <Container>
+            {yearMarkers}
+            {projects.map((project: any, index: number) => {
+                const [startDay, startMonth, startYear] = project.startDate.split("/").map(Number);
+                const startDate: any = new Date(startYear, startMonth - 1, startDay);
+
+                const [endDay, endMonth, endYear] = project.endDate.split("/").map(Number);
+                const endDate: any = new Date(endYear, endMonth - 1, endDay);
+
+                const projectDuration: any = endDate.getTime() - startDate.getTime();
+                const left = ((startDate.getTime() - earliestStartDate.getTime()) / totalTime) * 100;
+                const width = (projectDuration / totalTime) * 100;
+
+                const top = ((index + 1) / projects.length) * 85  // random value between 10% and 80%
+
                 return (
-                    <Project
-                        key={project.name}
-                        left={project.left}
-                        width={project.width}
-                        top={project.row * 25}
-                        index={index % colors.length}
-                        onMouseEnter={e => {
-                            setTooltipVisible(true);
-                            setTooltipContent(project.name);
-                            setTooltipPosition({top: e.clientY, left: e.clientX});
-                        }}
-                        onMouseLeave={() => setTooltipVisible(false)}
-                    />
+                    <Project key={project.name} left={left} top={top} width={width} index={index}>
+                        {project.name}
+                    </Project>
                 );
             })}
-            {tooltipVisible && <Tooltip style={{top: tooltipPosition.top, left: tooltipPosition.left}}>
-                {tooltipContent}
-            </Tooltip>}
         </Container>
     );
 };
