@@ -23,11 +23,13 @@ const Tooltip: any = styled.div`
   border: 1px solid #e0e0e0;
   border-radius: 5px;
   padding: 8px;
-  width: 200px;
+  max-width: 90vw; // or any other desired max-width
+  width: auto; // Make sure the tooltip adjusts based on content
+
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   pointer-events: none;
-  white-space: nowrap;
+  // white-space: nowrap; // comment this out or remove
   display: ${(props: any) => (props.visible ? 'block' : 'none')};
   top: ${(props: any) => props.positionAbove ? 'initial' : props.y}px;
   bottom: ${(props: any) => props.positionAbove ? `${window.innerHeight - props.y}px` : 'initial'};
@@ -36,7 +38,7 @@ const Tooltip: any = styled.div`
 
 
 const Project: any = styled.div`
-  white-space: nowrap;
+  // white-space: nowrap; // consider adjusting or removing
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
