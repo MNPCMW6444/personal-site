@@ -14,7 +14,7 @@ const projects = [
         }
     },
     {
-        name: "IAF Ofek324", startDate: "13/06/2022", endDate: "01/01/2024", more: {
+        name: "IAF Ofek324", startDate: "13/06/2022", endDate: "today", more: {
             header: null,
             website: "https://www.iaf.org.il/9577-55976-he/IAF.aspx",
             linkedin: "This is a classified project developed for IAF control division operational needs",
@@ -34,7 +34,7 @@ const projects = [
         }
     },
     {
-        name: "Neurobicare", startDate: "15/12/2022", endDate: "01/07/2023", more: {
+        name: "Neurobicare", startDate: "15/12/2022", endDate: "today", more: {
             header: null,
             website: "",
             linkedin: "",
@@ -54,7 +54,7 @@ const projects = [
         }
     },
     {
-        name: "Neurobica.io", startDate: "15/12/2022", endDate: "01/07/2023", more: {
+        name: "Neurobica.io", startDate: "15/12/2022", endDate: "today", more: {
             header: null,
             website: "",
             linkedin: "",
@@ -64,7 +64,7 @@ const projects = [
         }
     },
     {
-        name: "Failean", startDate: "01/07/2023", endDate: "01/01/2024", more: {
+        name: "Failean", startDate: "01/07/2023", endDate: "today", more: {
             header: null,
             website: "",
             linkedin: "",
@@ -74,7 +74,7 @@ const projects = [
         }
     },
     {
-        name: "Offisito", startDate: "01/09/2023", endDate: "01/01/2024", more: {
+        name: "Offisito", startDate: "01/09/2023", endDate: "today", more: {
             header: null,
             website: "",
             linkedin: "",
@@ -84,7 +84,7 @@ const projects = [
         }
     },
     {
-        name: "DiveOps", startDate: "01/09/2023", endDate: "01/01/2024", more: {
+        name: "DiveOps", startDate: "01/09/2023", endDate: "today", more: {
             header: null,
             website: "",
             linkedin: "",
@@ -96,8 +96,8 @@ const projects = [
 ];
 
 
-const ROW_HEIGHT = 40;
-const YEAR_BAR_HEIGHT = 25;
+const ROW_HEIGHT = 25;
+const YEAR_BAR_HEIGHT = 28;
 
 const Container: any = styled.div`
   display: flex;
@@ -133,13 +133,14 @@ const Tooltip: any = styled.div`
 
 
 const Project: any = styled.div`
-  // white-space: nowrap; // consider adjusting or removing
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
   top: ${(props: any) => props.top}px;
   left: ${(props: any) => props.left}%;
-  height: ${ROW_HEIGHT}px;
+  height: ${ROW_HEIGHT}px; // adjust this value to your preferred height
+  font-size: ${ROW_HEIGHT / 2}px; // adjust this value to your preferred font size
+  line-height: ${ROW_HEIGHT}px; // ensure line-height matches the height to vertically center the text
   width: ${(props: any) => props.width}%;
   padding: 5px;
   background-color: ${(props: any) => colors[props.index].bg};
@@ -147,11 +148,12 @@ const Project: any = styled.div`
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 2;
-
-
-  position: absolute; // Ensures tooltip is positioned relative to the project
-
+  display: flex; // added for vertical and horizontal centering
+  align-items: center; // added for vertical centering
+  justify-content: center; // added for horizontal centering
+  position: absolute;
 `;
+
 
 const YearBlock: any = styled.div`
   position: absolute;
@@ -213,7 +215,7 @@ const calculateRows = (projects: any[]) => {
 
             const lastProjectInRow = rows[i][rows[i].length - 1];
             const [lastEndDay, lastEndMonth, lastEndYear] = lastProjectInRow.endDate.split("/").map(Number);
-            const lastEndDate = new Date(lastEndYear, lastEndMonth - 1, lastEndDay);
+            const lastEndDate = lastProjectInRow.endDate === "today" ? new Date() : new Date(lastEndYear, lastEndMonth - 1, lastEndDay);
 
             if (startDate.getTime() > lastEndDate.getTime()) {
                 rows[i].push(project);
@@ -237,10 +239,7 @@ const Timeline = () => {
         const [day, month, year] = project.startDate.split("/").map(Number);
         return new Date(year, month - 1, day).getTime();
     })));
-    const latestEndDate: any = new Date(Math.max(...projects.map((project: any) => {
-        const [day, month, year] = project.endDate.split("/").map(Number);
-        return new Date(year, month - 1, day).getTime();
-    })));
+    const latestEndDate: any = new Date();
     const totalTime = latestEndDate.getTime() - earliestStartDate.getTime();
 
     const startYear = earliestStartDate.getFullYear();
@@ -303,7 +302,7 @@ const Timeline = () => {
                     const startDate = new Date(startYear, startMonth - 1, startDay);
 
                     const [endDay, endMonth, endYear] = project.endDate.split("/").map(Number);
-                    const endDate = new Date(endYear, endMonth - 1, endDay);
+                    const endDate = project.endDate === "today" ? new Date() : new Date(endYear, endMonth - 1, endDay);
 
                     const projectDuration = endDate.getTime() - startDate.getTime();
                     const left = ((startDate.getTime() - earliestStartDate.getTime()) / totalTime) * 100;
