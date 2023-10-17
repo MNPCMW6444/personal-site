@@ -2,8 +2,102 @@ import {Fragment, useState} from 'react';
 import styled from 'styled-components';
 import CardTT from "./CardTT"
 
-const ROW_HEIGHT = 30;
-const YEAR_BAR_HEIGHT = 20;
+const projects = [
+    {
+        name: "IAF TrackIshi", startDate: "10/01/2021", endDate: "13/06/2022", more: {
+            header: null,
+            website: "https://github.com/MNPCMW6444/TrackIshi",
+            linkedin: "This is a B2G project also released as open source",
+            declaration: "Enterprise - Custom Human Resource Management Application - Developed using MERN stack. My first production project.",
+            activeTime: null,
+
+        }
+    },
+    {
+        name: "IAF Ofek324", startDate: "13/06/2022", endDate: "01/01/2024", more: {
+            header: null,
+            website: "https://www.iaf.org.il/9577-55976-he/IAF.aspx",
+            linkedin: "This is a classified project developed for IAF control division operational needs",
+            declaration: "After (and while) using this system as the basis for the operational role i have been serving as a developer",
+            activeTime: null,
+
+        }
+    },
+    {
+        name: "Neurobica Supplements", startDate: "01/03/2021", endDate: "01/04/2023", more: {
+            header: null,
+            website: "neurobica.online (inactive)",
+            linkedin: "https://www.linkedin.com/company/neurobica",
+            declaration: "",
+            activeTime: null,
+
+        }
+    },
+    {
+        name: "Neurobicare", startDate: "15/12/2022", endDate: "01/07/2023", more: {
+            header: null,
+            website: "",
+            linkedin: "",
+            declaration: "",
+            activeTime: null,
+
+        }
+    },
+    {
+        name: "CapHub.ai", startDate: "01/03/2023", endDate: "01/07/2023", more: {
+            header: null,
+            website: "",
+            linkedin: "",
+            declaration: "",
+            activeTime: null,
+
+        }
+    },
+    {
+        name: "Neurobica.io", startDate: "15/12/2022", endDate: "01/07/2023", more: {
+            header: null,
+            website: "",
+            linkedin: "",
+            declaration: "",
+            activeTime: null,
+
+        }
+    },
+    {
+        name: "Failean", startDate: "01/07/2023", endDate: "01/01/2024", more: {
+            header: null,
+            website: "",
+            linkedin: "",
+            declaration: "",
+            activeTime: null,
+
+        }
+    },
+    {
+        name: "Offisito", startDate: "01/09/2023", endDate: "01/01/2024", more: {
+            header: null,
+            website: "",
+            linkedin: "",
+            declaration: "",
+            activeTime: null,
+
+        }
+    },
+    {
+        name: "DiveOps", startDate: "01/09/2023", endDate: "01/01/2024", more: {
+            header: null,
+            website: "",
+            linkedin: "",
+            declaration: "",
+            activeTime: null,
+
+        }
+    },
+];
+
+
+const ROW_HEIGHT = 40;
+const YEAR_BAR_HEIGHT = 25;
 
 const Container: any = styled.div`
   display: flex;
@@ -45,7 +139,7 @@ const Project: any = styled.div`
   text-align: center;
   top: ${(props: any) => props.top}px;
   left: ${(props: any) => props.left}%;
-  height: ${ROW_HEIGHT - 15}px;
+  height: ${ROW_HEIGHT}px;
   width: ${(props: any) => props.width}%;
   padding: 5px;
   background-color: ${(props: any) => colors[props.index].bg};
@@ -64,7 +158,7 @@ const YearBlock: any = styled.div`
   bottom: 0;
   left: ${(props: any) => props.left}%;
   width: ${(props: any) => props.width}%;
-  height: 20px;
+  height: 25px;
   background-color: #e0e0e0;
   border-radius: 4px;
   z-index: 1;
@@ -138,7 +232,7 @@ const calculateRows = (projects: any[]) => {
 }
 
 
-const Timeline = ({projects}: any) => {
+const Timeline = () => {
     const earliestStartDate: any = new Date(Math.min(...projects.map((project: any) => {
         const [day, month, year] = project.startDate.split("/").map(Number);
         return new Date(year, month - 1, day).getTime();

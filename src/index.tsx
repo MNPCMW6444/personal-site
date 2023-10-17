@@ -1,15 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
-import App from "./App";
+import Timeline from "./Timeline";
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+const timeline = ReactDOM.createRoot(
+    document.getElementById("react1") as HTMLElement
 );
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+timeline.render(
+    <React.StrictMode>
+        <Timeline/>
+    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
